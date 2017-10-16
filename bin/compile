@@ -17,24 +17,42 @@ CACHE_DIR=$2
 
 
 # Default font location
-NOTO_FONT_URL="https://noto-website.storage.googleapis.com/pkgs/Noto-hinted.zip"
+NOTO_FONT_URL="https://noto-website.storage.googleapis.com/pkgs/Noto-unhinted.zip"
+NOTO_CJK_URL="https://noto-website.storage.googleapis.com/pkgs/NotoSansCJK.ttc.zip"
 
 # attempt to extract the NOTO_FONT_URL parameter form the Heroku configuration vars, fall back to the default version if unavailable
 if [ -d "$ENV_DIR" -a -e "$ENV_DIR/NOTO_FONT_URL" ]; then
   export NOTO_FONT_URL=$(cat "$ENV_DIR/NOTO_FONT_URL")
 else
-  print "Noto Font URL not defined, using $NOTO_FONT_URL."
+  print "Noto font URL not defined, using $NOTO_FONT_URL."
   export HUGO_VERSION=$NOTO_FONT_URL
 fi
 
+
+# attempt to extract the NOTO_FONT_URL parameter form the Heroku configuration vars, fall back to the default version if unavailable
+if [ -d "$ENV_DIR" -a -e "$ENV_DIR/NOTO_CJK_URL" ]; then
+  export NOTO_CJK_URL=$(cat "$ENV_DIR/NOTO_CJK_URL")
+else
+  print "Noto CJK font URL not defined, using $NOTO_CJK_URL."
+  export HUGO_VERSION=$NOTO_CJK_URL
+fi
+
+
 mkdir -p $CACHE_DIR
 
-print "Downloading fonts"
+print "Downloading regular fonts"
 cd $CACHE_DIR
 curl -L --silent $NOTO_FONT_URL > noto-fonts.zip
 unzip -o noto-fonts.zip -d noto-fonts
 rm noto-fonts.zip
 
+print "Downloading CJK fonts"
+cd $CACHE_DIR
+curl -L --silent $NOTO_FONT_URL > noto-cjk-fonts.zip
+unzip -o noto-cjk-fonts.zip -d noto-cjk-fonts
+rm noto-cjk-fonts.zip
+
 print "Copying fonts to app folder"
 mkdir $BUILD_DIR/.fonts
 cp $CACHE_DIR/noto-fonts/* $BUILD_DIR/.fonts/
+cp $CACHE_DIR/noto-cjk-fonts/* $BUILD_DIR/.fonts/
