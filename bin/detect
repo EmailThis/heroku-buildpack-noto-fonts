@@ -6,17 +6,4 @@ set -eo pipefail
 BUILD_DIR=$1
 CACHE_DIR=$2
 
-
-echo "
-===============================================================================
-BUILD_DIR CACHE_DIR
-$BUILD_DIR $CACHE_DIR
-===============================================================================
-"
-
-echo '
-    Noto Fonts Buildpack
-'
-echo ""
-
-exit 0
+echo "Noto Fonts Buildpack" && exit 0

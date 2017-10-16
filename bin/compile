@@ -23,7 +23,7 @@ NOTO_FONT_URL="https://noto-website.storage.googleapis.com/pkgs/Noto-hinted.zip"
 if [ -d "$ENV_DIR" -a -e "$ENV_DIR/NOTO_FONT_URL" ]; then
   export NOTO_FONT_URL=$(cat "$ENV_DIR/NOTO_FONT_URL")
 else
-  echo "\n-----> Noto Font URL not defined, using $NOTO_FONT_URL."
+  print "Noto Font URL not defined, using $NOTO_FONT_URL."
   export HUGO_VERSION=$NOTO_FONT_URL
 fi
 
