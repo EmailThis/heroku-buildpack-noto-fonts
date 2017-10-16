@@ -32,7 +32,8 @@ mkdir -p $CACHE_DIR
 print "Downloading fonts"
 cd $CACHE_DIR
 curl -L --silent $NOTO_FONT_URL > noto-fonts.zip
-unzip noto-fonts.zip && rm noto-fonts.zip
+unzip noto-fonts.zip -d noto-fonts 
+rm noto-fonts.zip
 
 print "Copying fonts to app folder"
 mkdir $BUILD_DIR/.fonts
