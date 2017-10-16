@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+# fail fast
+set -e
+
+# debug
+# set -x
+
+function print() {
+  echo "-----> $*"
+}
+
+# parse and derive params
+BUILD_DIR=$1
+CACHE_DIR=$2
+
+
+# Default font location
+NOTO_FONT_URL="https://noto-website.storage.googleapis.com/pkgs/Noto-hinted.zip"
+
+# attempt to extract the NOTO_FONT_URL parameter form the Heroku configuration vars, fall back to the default version if unavailable
+if [ -d "$ENV_DIR" -a -e "$ENV_DIR/NOTO_FONT_URL" ]; then
+  export NOTO_FONT_URL=$(cat "$ENV_DIR/NOTO_FONT_URL")
+else
+  echo "\n-----> Noto Font URL not defined, using $NOTO_FONT_URL."
+  export HUGO_VERSION=$NOTO_FONT_URL
+fi
+
+mkdir -p $CACHE_DIR
+
+print "Downloading fonts"
+cd $CACHE_DIR
+curl -L --silent $NOTO_FONT_URL > noto-fonts.zip
+unzip noto-fonts.zip && rm noto-fonts.zip
+
+print "Copying fonts to app folder"
+mkdir $BUILD_DIR/.fonts
+cp $CACHE_DIR/fonts/* $BUILD_DIR/.fonts/
